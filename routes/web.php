@@ -33,11 +33,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/send-email', [EmailController::class, 'index']);
 
+
+Route::view('homepagedemo','main');
+Route::view('about','aboutus');
+Route::view('services','services');
+Route::view('contact','contact');
+
+
+
 Route::post('/upload',function(Request $request){
     // $request->image->store('images','public');
 
     $request->validate([
-        'image.*' => 'mimes:jpeg,jpg,png,gif,csv,txt,pdf|max:2048'
+        'image' => 'mimes:jpeg,jpg,png|max:2048'
     ]);
 
     if ($request->hasFile('image')) {
@@ -52,7 +60,11 @@ Route::post('/upload',function(Request $request){
         $request->image->storeAs('images',$filename,'public');
         auth()->User()->update(['avatar' => $filename]);
     }
+
     $request->session()->flash('error','Please choose your profile picture!');
     return redirect()->back();
+    
+    
+
     // dd(request()->file('image'));
 });
